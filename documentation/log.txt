@@ -1,0 +1,3 @@
+7 Jan 2025:
+Scrape the gameweek matches into a dictionary
+Use Selenuim to get ALL gameweeks not just the latest four
