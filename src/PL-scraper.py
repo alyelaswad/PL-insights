@@ -1,9 +1,32 @@
 import requests
 from bs4 import BeautifulSoup
 import csv
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import time
 
-page = requests.get("https://onefootball.com/en/competition/premier-league-9/results")
+driver = webdriver.Chrome()
 
+# page = requests.get("https://onefootball.com/en/competition/premier-league-9/results")
+driver.get("https://onefootball.com/en/competition/premier-league-9/results")
+time.sleep(15)
+try:
+    cookies_button = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'I Accept')]"))
+    )
+    cookies_button.click()
+    print("Cookies consent clicked")
+except:
+    print("Cookies consent button not found or already handled")
+
+show_all_button = driver.find_element(By.XPATH, "//button[contains(text(), 'Show all results')]")
+show_all_button.click()
+time.sleep(5)
+src = driver.page_source
+# driver.quit()
 class Match:
     def __init__(self,homeTeam,awayTeam,Score,Date):
         self.homeTeam = homeTeam
@@ -13,8 +36,8 @@ class Match:
     def displayMatch(self):
         print(f"{self.homeTeam} {self.Score} {self.awayTeam}")
         
-def main(page):
-    src= page.content
+def main(src):
+    # src= page.content
     soup = BeautifulSoup(src,"lxml")
     allGameweeks = soup.find_all('div',{"class": 'MatchCardsListsAppender_container__y5ame'})
     allMatches = allGameweeks[0].find_all('ul',{'class':'MatchCardsList_matches__8_UwB'})
@@ -45,4 +68,4 @@ def main(page):
             GWnum = GWnum -1
         allMatches_scraped[i].displayMatch()
 
-main(page)
+main(src)
