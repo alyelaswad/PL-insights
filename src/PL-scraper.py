@@ -12,7 +12,7 @@ driver = webdriver.Chrome()
 
 # page = requests.get("https://onefootball.com/en/competition/premier-league-9/results")
 driver.get("https://onefootball.com/en/competition/premier-league-9/results")
-time.sleep(15)
+time.sleep(3)
 try:
     cookies_button = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'I Accept')]"))
@@ -24,7 +24,7 @@ except:
 
 show_all_button = driver.find_element(By.XPATH, "//button[contains(text(), 'Show all results')]")
 show_all_button.click()
-time.sleep(5)
+time.sleep(2)
 src = driver.page_source
 # driver.quit()
 class Match:
@@ -61,11 +61,18 @@ def main(src):
         allMatches_scraped.append(Match(all_TeamNames[i],all_TeamNames[i+1],score,""))
 
     GWnum = 20
+    matches_dict=[]
     for i in range(len(allMatches_scraped)):
         if (i%10 == 0):
             print("-" * 50)
             print(f"Gameweek {GWnum}")
             GWnum = GWnum -1
         allMatches_scraped[i].displayMatch()
-
+        matches_dict.append({"Gameweek":GWnum+1,"Home Team":allMatches_scraped[i].homeTeam,"Score": allMatches_scraped[i].Score, "Away Team":allMatches_scraped[i].awayTeam})
+    keys = matches_dict[0].keys()
+    with open('/Users/alyalaswad/Desktop/Personal Practice/Scraping/fixtures.csv', 'w') as outfile:
+        dict_writer = csv.DictWriter(outfile,keys)
+        dict_writer.writeheader()
+        dict_writer.writerows(matches_dict)
+        print('written to csv')
 main(src)
