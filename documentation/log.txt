@@ -3,4 +3,4 @@ Scrape the gameweek matches into a dictionary
 Use Selenuim to get ALL gameweeks not just the latest four
 Written this data to a csv file
 8 Jan 2025:
-Perform data analysis for each team using the scraped csv file using data like goals scored, conceded, etc..
+Perform data analysis for each team using the scraped csv file using data like goals scored, conceded, etc.
